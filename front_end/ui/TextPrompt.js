@@ -113,6 +113,7 @@ WebInspector.TextPrompt.prototype = {
     {
         if (this._proxyElement)
             throw "Cannot attach an attached TextPrompt";
+        /** @type {!Element} */
         this._element = element;
 
         this._boundOnKeyDown = this.onKeyDown.bind(this);
@@ -128,7 +129,7 @@ WebInspector.TextPrompt.prototype = {
         element.parentElement.insertBefore(this._proxyElement, element);
         this._proxyElement.appendChild(element);
         this._element.classList.add("text-prompt");
-        this._element.addEventListener("keydown", this._boundOnKeyDown, false);
+        this._element.addEventListener("keydown", this._boundOnKeyDown, true);
         this._element.addEventListener("input", this._boundOnInput, false);
         this._element.addEventListener("mousewheel", this._boundOnMouseWheel, false);
         this._element.addEventListener("selectstart", this._boundSelectStart, false);
@@ -797,6 +798,18 @@ WebInspector.TextPrompt.prototype = {
         selection.addRange(selectionRange);
     },
 
+    moveCaretToIndex: function(index)
+    {
+        var selection = this._element.getComponentSelection();
+        var selectionRange = this._createRange();
+
+        selectionRange.setStart(this._element.firstChild, index);
+        selectionRange.setEnd(this._element.firstChild, index);
+
+        selection.removeAllRanges();
+        selection.addRange(selectionRange);
+    },
+
     /**
      * @param {!Event} event
      * @return {boolean}
@@ -815,6 +828,13 @@ WebInspector.TextPrompt.prototype = {
     proxyElementForTests: function()
     {
         return this._proxyElement || null;
+    },
+
+    /**
+     * @return {string}
+     */
+    getSuggestBoxRepresentation: function() {
+        return "getSuggestBoxRepresentation not implemented for WebInspector.TextPrompt";
     },
 
     __proto__: WebInspector.Object.prototype
@@ -998,14 +1018,7 @@ WebInspector.TextPromptWithHistory.prototype = {
                 if (firstNewlineIndex === -1)
                     this.moveCaretToEndOfPrompt();
                 else {
-                    var selection = this._element.getComponentSelection();
-                    var selectionRange = this._createRange();
-
-                    selectionRange.setStart(this._element.firstChild, firstNewlineIndex);
-                    selectionRange.setEnd(this._element.firstChild, firstNewlineIndex);
-
-                    selection.removeAllRanges();
-                    selection.addRange(selectionRange);
+                    this.moveCaretToIndex(firstNewlineIndex);
                 }
             }
 

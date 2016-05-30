@@ -341,7 +341,160 @@ diff_match_patch.prototype = {
      * @return {!Array.<!{0: number, 1: string}>}
      */
     diff_main: function(text1, text2) { }
-}
+};
+
+var dirac = {
+    /** @type {boolean} */
+    _DEBUG_EVAL: true,
+    /** @type {boolean} */
+    hasFeature: true,
+    /** @type {boolean} */
+    hasREPL: true,
+    /** @type {boolean} */
+    hasParinfer: true,
+    /** @type {boolean} */
+    hasFriendlyLocals: true,
+    /** @type {boolean} */
+    hasClusteredLocals: true,
+    /** @type {boolean} */
+    hasInlineCFs: true,
+    /**
+    * @param {string} code
+    * @return {string}
+    */
+    codeAsString: function (code) {},
+    /**
+    * @param {string} string
+    * @return {string}
+    */
+    stringEscape: function (string) {},
+    /**
+    * @param {string} code
+    * @param {?} callback
+    */
+    evalInCurrentContext: function(code, callback) {},
+    /**
+    * @param {string} code
+    * @param {?} callback
+    */
+    evalInDefaultContext: function(code, callback) {},
+    /**
+    * @return {boolean}
+    */
+    hasCurrentContext: function() {},
+    /**
+    * @return {boolean}
+    */
+    hasDefaultContext: function() {},
+
+    /**
+    * @param {?} callFrame
+    * @return {!Promise<!dirac.ScopeInfo>}
+    */
+    extractScopeInfoFromScopeChainAsync: function(callFrame) {},
+    /**
+    * @param {string} namespaceName
+    * @return {!Promise<Array.<string>>}
+    */
+    extractNamespaceSymbolsAsync: function(namespaceName) {},
+    /**
+    * @return {!Promise<Array.<string>>}
+    */
+    extractNamespacesAsync: function() {},
+
+    startListeningForWorkspaceChanges: function() {},
+    stopListeningForWorkspaceChanges: function() {},
+    /**
+    * @param {string} namespaceName
+    */
+    invalidateNamespaceSymbolsCache: function (namespaceName) {},
+    invalidateNamespacesCache: function() {},
+
+    // -- these are dynamically added by dirac.implant namespace ------------------------------------------------------------
+
+    initConsole: function() {},
+    initRepl: function() {},
+    getVersion: function() {},
+    getRuntimeTag: function() {},
+    /**
+     * @param {Element} textAreaElement
+     * @param {boolean} useParinfer
+     * @returns {!CodeMirror}
+     */
+    adoptPrompt: function(textAreaElement, useParinfer) {},
+    /**
+     * @param {number} requestId
+     * @param {string} code
+     * @param {dirac.ScopeInfo} scopeInfo
+     */
+    sendEvalRequest: function(requestId, code, scopeInfo) {},
+    /**
+     * @param {string} ns
+     * @param {string} ext
+     * @returns {string}
+     */
+    nsToRelpath: function(ns, ext) {},
+
+    /**
+     * @param {string} source
+     * @returns {?dirac.NamespaceDescriptor}
+     */
+    parseNsFromSource: function(source) {},
+
+    /**
+     * @param {string} text
+     */
+    feedback: function(text) {}
+};
+
+/**
+ * @typedef {{name:!string, identifier:?string}}
+ */
+dirac.ScopeFrameProp;
+
+/**
+ * @typedef {{title:?string, props:?Array.<!dirac.ScopeFrameProp>}}
+ */
+dirac.ScopeFrame;
+
+/**
+ * @typedef {{frames:!Array.<!dirac.ScopeFrame>}}
+ */
+dirac.ScopeInfo;
+
+/**
+ * @typedef {{name:!string, url:!string}}
+ */
+dirac.NamespaceDescriptor;
+
+
+var Keysim = {
+    Keyboard: {
+        US_ENGLISH: {}
+    },
+
+    /**
+     * Fires the correct sequence of events on the given target as if the given
+     * action was undertaken by a human.
+     *
+     * @param {string} action e.g. "alt+shift+left" or "backspace"
+     * @param {HTMLElement} target
+     * @param {?function()} callback
+     */
+    dispatchEventsForAction: function(action, target, callback) {
+    },
+
+    /**
+     * Fires the correct sequence of events on the given target as if the given
+     * input had been typed by a human.
+     *
+     * @param {string} input
+     * @param {HTMLElement} target
+     * @param {?function()} callback
+     */
+    dispatchEventsForInput: function(input, target, callback) {
+    }
+};
 
 /** @constructor */
 function Path2D() {}
@@ -518,7 +671,7 @@ CodeMirror.prototype = {
     undo: function() { },
     unlinkDoc: function(other) { }
 }
-/** @type {!{cursorDiv: Element}} */
+/** @type {!{cursorDiv: Element, lineDiv: Element}} */
 CodeMirror.prototype.display;
 /** @type {!Object} */
 CodeMirror.Pass;
@@ -530,6 +683,7 @@ CodeMirror.getMode = function(options, spec) { };
 CodeMirror.overlayMode = function(mode1, mode2, squashSpans) { };
 CodeMirror.defineMode = function(modeName, modeConstructor) { };
 CodeMirror.startState = function(mode) { };
+CodeMirror.runMode = function(string, modespec, callback, options) { };
 
 /** @typedef {{canceled: boolean, from: !CodeMirror.Pos, to: !CodeMirror.Pos, text: string, origin: string, cancel: function()}} */
 CodeMirror.BeforeChangeObject;

@@ -147,7 +147,17 @@ WebInspector.InspectorFrontendHostStub.prototype = {
      */
     inspectedURLChanged: function(url)
     {
-        document.title = WebInspector.UIString("Developer Tools - %s", url);
+        var version = dirac.getVersion();
+        dirac.getRuntimeTag(
+        /** @suppressGlobalPropertiesCheck */
+        function(tag) {
+          if (!tag) {
+            tag = "[no runtime] " + url;
+          }
+          document.title = WebInspector.UIString("Dirac v%s <-> %s", version, tag);
+        });
+        // this is just for a temporary display, we will update it when get_runtime_tag calls us back with full runtime info
+        document.title = WebInspector.UIString("Dirac v%s <-> %s", version, url);
     },
 
     /**

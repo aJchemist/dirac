@@ -72,7 +72,7 @@ WebInspector.SuggestBox = function(suggestBoxDelegate, maxItemsHeight)
 }
 
 /**
- * @typedef Array.<{title: string, className: (string|undefined)}>
+ * @typedef Array.<{title: string, className: (string|undefined), info: (string|undefined)}>
  */
 WebInspector.SuggestBox.Suggestions;
 
@@ -246,9 +246,10 @@ WebInspector.SuggestBox.prototype = {
      * @param {string} prefix
      * @param {string} text
      * @param {string|undefined} className
+     * @param {string|undefined} info
      * @param {number} index
      */
-    _createItemElement: function(prefix, text, className, index)
+    _createItemElement: function(prefix, text, className, info, index)
     {
         var element = createElementWithClass("div", "suggest-box-content-item source-code " + (className || ""));
         element.tabIndex = -1;
@@ -259,7 +260,11 @@ WebInspector.SuggestBox.prototype = {
             element.createChild("span", "suffix").textContent = text.trimEnd(50);
         }
         element.__fullValue = text;
-        element.createChild("span", "spacer");
+        if (info) {
+          element.createChild("span", "info").textContent = info.trimEnd(50);
+        } else {
+          element.createChild("span", "spacer");
+        }
         element.addEventListener("mousedown", this._onItemMouseDown.bind(this), false);
         return element;
     },
@@ -279,7 +284,7 @@ WebInspector.SuggestBox.prototype = {
 
         for (var i = 0; i < items.length; ++i) {
             var item = items[i];
-            var currentItemElement = this._createItemElement(userEnteredText, item.title, item.className, i);
+            var currentItemElement = this._createItemElement(userEnteredText, item.title, item.className, item.info, i);
             this._element.appendChild(currentItemElement);
         }
     },
